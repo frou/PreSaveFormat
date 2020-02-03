@@ -95,6 +95,9 @@ def is_excluded(on_save, path):
 #### EXPLORE PATH ####
 
 
+# @todo #0 Stop doing an involved search for the elm-format executable. Simply assume that it's accessible.
+
+
 def find_elm_format(view):
     settings = sublime.load_settings('elm-format-on-save.sublime-settings')
     given_path = settings.get('absolute_path')
