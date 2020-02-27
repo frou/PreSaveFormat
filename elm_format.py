@@ -14,18 +14,18 @@ class ElmFormatCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         region = sublime.Region(0, self.view.size())
         content = self.view.substr(region)
+        TXT_ENCODING="utf-8"
 
         stdout, stderr = subprocess.Popen(
             ["elm-format", '--stdin', '--yes'],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            shell=os.name=="nt").communicate(input=bytes(content, 'UTF-8'))
+            shell=os.name=="nt").communicate(input=bytes(content, TXT_ENCODING))
 
-        errstr = stderr.strip().decode("UTF-8")
+        errstr = stderr.strip().decode(TXT_ENCODING)
+        errstr = re.sub("\x1b\\[\\d{1,2}m", "", errstr) # Strip ANSI colour codes
         if errstr:
-            # Strip ANSI colour codes
-            errstr = re.sub("\x1b\\[\\d{1,2}m", "", errstr)
             print("\n\n{0}\n\n".format(errstr))
             sublime.message_dialog("elm-format failed. See console.")
         else:
@@ -50,8 +50,11 @@ class ElmFormatOnSave(sublime_plugin.ViewEventListener):
 
 
 def needs_format(view):
-    settings = sublime.load_settings('elm-format-on-save.sublime-settings')
-    on_save = settings.get('on_save', True)
+    SETTINGS_BASENAME='elm-format-on-save.sublime-settings'
+    SETTINGS_KEY_ONSAVE='on_save'
+
+    settings = sublime.load_settings(SETTINGS_BASENAME)
+    on_save = settings.get(SETTINGS_KEY_ONSAVE, True)
 
     if isinstance(on_save, bool):
         return on_save
@@ -63,7 +66,7 @@ def needs_format(view):
         if isinstance(included, bool) and isinstance(excluded, bool):
             return included and not excluded
 
-    sublime.message_dialog("elm formatting: \"on_save\" setting has invalid value.")
+    sublime.message_dialog('"{0}" in "{1}" has an invalid value'.format(SETTINGS_KEY_ONSAVE, SETTINGS_BASENAME))
     return False
 
 
