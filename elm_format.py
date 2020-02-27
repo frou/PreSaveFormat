@@ -13,28 +13,46 @@ class ElmFormat(sublime_plugin.TextCommand):
     # Overrides --------------------------------------------------
 
     def run(self, edit):
-        region = sublime.Region(0, self.view.size())
-        content = self.view.substr(region)
+        try:
+            self.run_core(edit)
+        except Exception as e:
+            sublime.error_message(str(e))
 
-        stdout, stderr = subprocess.Popen(
+    # ------------------------------------------------------------
+
+    def run_core(self, edit):
+        view_region = sublime.Region(0, self.view.size())
+        view_content = self.view.substr(view_region)
+
+        child_proc = subprocess.Popen(
             self.COMMAND_LINE,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             startupinfo=self.platform_startupinfo(),
-        ).communicate(input=bytes(content, self.TXT_ENCODING))
+        )
+        stdout_content, stderr_content = child_proc.communicate(
+            input=bytes(view_content, self.TXT_ENCODING)
+        )
+        stdout_content, stderr_content = (
+            stdout_content.decode(self.TXT_ENCODING),
+            stderr_content.decode(self.TXT_ENCODING),
+        )
 
-        errstr = stderr.strip().decode(self.TXT_ENCODING)
-        errstr = re.sub("\x1b\\[\\d{1,2}m", "", errstr)  # Strip ANSI colour codes
-        if errstr:
-            print("\n\n{0}\n\n".format(errstr))  # noqa: T001
+        if child_proc.returncode != 0:
+            # Remove any ANSI colour codes
+            stderr_content = re.sub("\x1b\\[\\d{1,2}m", "", stderr_content)
+            stderr_content = stderr_content.strip()
+            print("\n\n{0}\n\n".format(stderr_content))  # noqa: T001
             sublime.set_timeout(
-                lambda: sublime.status_message("ELM-FORMAT FAILED - SEE CONSOLE"), 100
+                lambda: sublime.status_message(
+                    "{0} failed - see console".format(self.COMMAND_LINE[0]).upper()
+                ),
+                100,
             )
-        else:
-            self.view.replace(edit, region, stdout.decode(self.TXT_ENCODING))
+            return
 
-    # ------------------------------------------------------------
+        self.view.replace(edit, view_region, stdout_content)
 
     def platform_startupinfo(self):
         if sys.platform == "win32":
