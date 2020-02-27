@@ -1,14 +1,4 @@
 {
-    // Provide an absolute path to the elm-format binary.
-    // I might put "/usr/local/bin/elm-format" if the plugin is
-    // having trouble finding the executable on my PATH.
-    //
-    // It is probably more helpful if you want to use a specific
-    // version of elm-format like "/usr/local/bin/elm-format-0.8"
-    // for some reason
-    //
-    "absolute_path": "",
-
     // Be more specific about when you run elm-format. You can use
     // a boolean value to just turn it on and off:
     //

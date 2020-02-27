@@ -12,16 +12,11 @@ import subprocess
 
 class ElmFormatCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        elm_format = find_elm_format(self.view)
-
-        if elm_format == None:
-            return
-
         region = sublime.Region(0, self.view.size())
         content = self.view.substr(region)
 
         stdout, stderr = subprocess.Popen(
-            [elm_format, '--stdin', '--yes', '--elm-version=0.19'],
+            ["elm-format", '--stdin', '--yes', '--elm-version=0.19'],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -91,36 +86,6 @@ def is_excluded(on_save, path):
     return False
 
 
-
-#### EXPLORE PATH ####
-
-
-# @todo #0 Stop doing an involved search for the elm-format executable. Simply assume that it's accessible.
-
-
-def find_elm_format(view):
-    settings = sublime.load_settings('elm-format-on-save.sublime-settings')
-    given_path = settings.get('absolute_path')
-    if given_path != None and given_path != '':
-        if isinstance(given_path, str) and os.path.isabs(given_path) and os.access(given_path, os.X_OK):
-            return given_path
-
-        open_panel(view, bad_absolute_path)
-        return None
-
-    # shutil.which('elm-format', mode=os.X_OK) # only available in Python 3.3
-    exts = os.environ['PATHEXT'].lower().split(os.pathsep) if os.name == 'nt' else ['']
-    for directory in os.environ['PATH'].split(os.pathsep):
-        for ext in exts:
-            path = os.path.join(directory, 'elm-format' + ext)
-            if os.access(path, os.X_OK):
-                return path
-
-    open_panel(view, cannot_find_elm_format())
-    return None
-
-
-
 #### ERROR MESSAGES ####
 
 # @todo #0 Don't show elm-format errors in a panel, since they aren't navigable using keyboard shortcuts like build system compiler errrors are.
@@ -172,21 +137,6 @@ The "on_save" field in your settings is invalid.
 For help, check out the section on including/excluding files within:
 
   https://github.com/evancz/elm-format-on-save/blob/master/README.md
-
------------------------------------------------------------------------
-"""
-
-
-bad_absolute_path = """-- INVALID SETTINGS ---------------------------------------------------
-
-The "absolute_path" field in your settings is invalid.
-
-I need the following Python expressions to be True with the given path:
-
-    os.path.isabs(absolute_path)
-    os.access(absolute_path, os.X_OK)
-
-Is the path correct? Do you need to run "chmod +x" on the file?
 
 -----------------------------------------------------------------------
 """
