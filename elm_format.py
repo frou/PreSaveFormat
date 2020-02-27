@@ -24,7 +24,7 @@ class ElmFormatCommand(sublime_plugin.TextCommand):
         errstr = stderr.strip().decode(self.TXT_ENCODING)
         errstr = re.sub("\x1b\\[\\d{1,2}m", "", errstr)  # Strip ANSI colour codes
         if errstr:
-            print("\n\n{0}\n\n".format(errstr))
+            print("\n\n{0}\n\n".format(errstr))  # noqa: T001
             sublime.set_timeout(
                 lambda: sublime.status_message("ELM-FORMAT FAILED - SEE CONSOLE"), 100
             )
