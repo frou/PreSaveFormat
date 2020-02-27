@@ -53,6 +53,12 @@ class ElmFormat(sublime_plugin.TextCommand):
             )
             return
 
+        if not len(stdout_content):
+            raise Exception(
+                "{0} produced no output despite exiting successfully".format(
+                    self.COMMAND_LINE[0]
+                )
+            )
         self.view.replace(edit, view_region, stdout_content)
 
     def platform_startupinfo(self):
