@@ -32,13 +32,15 @@ class ElmFormatCommand(sublime_plugin.TextCommand):
                 lambda: sublime.status_message("ELM-FORMAT FAILED - SEE CONSOLE"), 100
             )
         else:
-            self.view.replace(edit, region, stdout.decode("UTF-8"))
+            self.view.replace(edit, region, stdout.decode(self.TXT_ENCODING))
 
 
 class ElmFormatOnSave(sublime_plugin.ViewEventListener):
 
     SETTINGS_BASENAME = "elm-format-on-save.sublime-settings"
     SETTINGS_KEY_ONSAVE = "on_save"
+    SETTINGS_KEY_INCLUDING = "including"
+    SETTINGS_KEY_EXCLUDING = "excluding"
 
     # Overrides --------------------------------------------------
 
@@ -62,8 +64,14 @@ class ElmFormatOnSave(sublime_plugin.ViewEventListener):
         if isinstance(on_save, bool):
             return on_save
         elif isinstance(on_save, dict):
-            included = [fragment in path for fragment in on_save.get("including")]
-            excluded = [fragment in path for fragment in on_save.get("excluding")]
+            included = [
+                fragment in path
+                for fragment in on_save.get(self.SETTINGS_KEY_INCLUDING)
+            ]
+            excluded = [
+                fragment in path
+                for fragment in on_save.get(self.SETTINGS_KEY_EXCLUDING)
+            ]
             return any(included) and not any(excluded)
         else:
             raise Exception(
