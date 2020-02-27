@@ -123,6 +123,9 @@ def find_elm_format(view):
 
 #### ERROR MESSAGES ####
 
+# @todo #0 Don't show elm-format errors in a panel, since they aren't navigable using keyboard shortcuts like build system compiler errrors are.
+#  Instead, just show a message like "ELM-FORMAT FAILED - SEE CONSOLE" in the status bar, and print() the error to the console in case we want to look at it. In most cases, we will probably instead run Build and see the errors that way.
+
 
 def open_panel(view, content):
     window = view.window()
