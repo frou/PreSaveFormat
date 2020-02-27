@@ -30,7 +30,6 @@ class ElmFormatCommand(sublime_plugin.TextCommand):
             sublime.set_timeout(lambda: sublime.status_message("ELM-FORMAT FAILED - SEE CONSOLE"), 100)
         else:
             self.view.replace(edit, region, stdout.decode('UTF-8'))
-            self.view.window().run_command("hide_panel", {"panel": "output.elm_format"})
 
 
 
