@@ -6,7 +6,7 @@ import sublime_plugin
 import subprocess
 
 
-class ElmFormatCommand(sublime_plugin.TextCommand):
+class ElmFormat(sublime_plugin.TextCommand):
 
     TXT_ENCODING = "utf-8"
 
@@ -35,7 +35,7 @@ class ElmFormatCommand(sublime_plugin.TextCommand):
             self.view.replace(edit, region, stdout.decode(self.TXT_ENCODING))
 
 
-class ElmFormatOnSave(sublime_plugin.ViewEventListener):
+class ElmFormatPreSave(sublime_plugin.ViewEventListener):
 
     SETTINGS_BASENAME = "elm-format-on-save.sublime-settings"
     SETTINGS_KEY_ONSAVE = "on_save"
