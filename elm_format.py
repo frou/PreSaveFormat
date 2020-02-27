@@ -1,5 +1,4 @@
-import os
-import os.path
+import sys
 import re
 import sublime
 import sublime_plugin
@@ -8,6 +7,7 @@ import subprocess
 
 class ElmFormat(sublime_plugin.TextCommand):
 
+    COMMAND_LINE = ["elm-format", "--stdin", "--yes"]
     TXT_ENCODING = "utf-8"
 
     # Overrides --------------------------------------------------
@@ -17,11 +17,11 @@ class ElmFormat(sublime_plugin.TextCommand):
         content = self.view.substr(region)
 
         stdout, stderr = subprocess.Popen(
-            ["elm-format", "--stdin", "--yes"],
+            self.COMMAND_LINE,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            shell=os.name == "nt",
+            startupinfo=self.platform_startupinfo(),
         ).communicate(input=bytes(content, self.TXT_ENCODING))
 
         errstr = stderr.strip().decode(self.TXT_ENCODING)
@@ -33,6 +33,18 @@ class ElmFormat(sublime_plugin.TextCommand):
             )
         else:
             self.view.replace(edit, region, stdout.decode(self.TXT_ENCODING))
+
+    # ------------------------------------------------------------
+
+    def platform_startupinfo(self):
+        if sys.platform == "win32":
+            si = subprocess.STARTUPINFO()
+            # Stop a visible console window from appearing.
+            si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            si.wShowWindow = subprocess.SW_HIDE
+            return si
+        else:
+            return None
 
 
 class ElmFormatPreSave(sublime_plugin.ViewEventListener):
