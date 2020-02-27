@@ -1,8 +1,9 @@
-import sys
-import re
 import sublime
 import sublime_plugin
+
+import re
 import subprocess
+import sys
 
 
 class ElmFormat(sublime_plugin.TextCommand):
