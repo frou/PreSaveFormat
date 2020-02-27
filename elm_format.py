@@ -48,57 +48,26 @@ class ElmFormatOnSave(sublime_plugin.ViewEventListener):
 
     def on_pre_save(self):
         try:
-            if self.needs_format(self.view):
+            if self.should_format(self.view.file_name()):
                 self.view.run_command("elm_format")
         except Exception as e:
-            sublime.error_message(e)
+            sublime.error_message(str(e))
 
     # ------------------------------------------------------------
 
-    def needs_format(self):
-
+    def should_format(self, path):
         settings = sublime.load_settings(self.SETTINGS_BASENAME)
         on_save = settings.get(self.SETTINGS_KEY_ONSAVE, True)
 
         if isinstance(on_save, bool):
             return on_save
         elif isinstance(on_save, dict):
-            path = self.view.file_name()
-            included = is_included(on_save, path)
-            excluded = is_excluded(on_save, path)
-            if isinstance(included, bool) and isinstance(excluded, bool):
-                return included and not excluded
+            included = [fragment in path for fragment in on_save.get("including")]
+            excluded = [fragment in path for fragment in on_save.get("excluding")]
+            return any(included) and not any(excluded)
         else:
             raise Exception(
                 '"{0}" in "{1}" has an invalid value'.format(
                     self.SETTINGS_KEY_ONSAVE, self.SETTINGS_BASENAME
                 )
             )
-
-
-def is_included(on_save, path):
-    if "including" in on_save:
-        if not isinstance(on_save.get("including"), list):
-            return None
-
-        for string in on_save.get("including"):
-            if string in path:
-                return True
-
-        return False
-
-    return True
-
-
-def is_excluded(on_save, path):
-    if "excluding" in on_save:
-        if not isinstance(on_save.get("excluding"), list):
-            return None
-
-        for string in on_save.get("excluding"):
-            if string in path:
-                return True
-
-        return False
-
-    return False
