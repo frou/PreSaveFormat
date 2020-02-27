@@ -37,12 +37,16 @@ class ElmFormatCommand(sublime_plugin.TextCommand):
 #### ON SAVE ####
 
 
-# @todo #0 Use ViewEventListener and @classmethod is_applicable
-class ElmFormatOnSave(sublime_plugin.EventListener):
-    def on_pre_save(self, view):
-        scope = view.scope_name(0)
-        if scope.find('source.elm') != -1 and needs_format(view):
-            view.run_command('elm_format')
+class ElmFormatOnSave(sublime_plugin.ViewEventListener):
+
+    @classmethod
+    def is_applicable(cls, settings):
+        return settings.get("syntax") == "Packages/ElmFeather/Elm.tmLanguage"
+
+    def on_pre_save(self):
+        if not needs_format(self.view):
+            return
+        self.view.run_command('elm_format')
 
 
 def needs_format(view):
