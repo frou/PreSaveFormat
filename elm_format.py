@@ -27,7 +27,7 @@ class ElmFormatCommand(sublime_plugin.TextCommand):
         errstr = re.sub("\x1b\\[\\d{1,2}m", "", errstr) # Strip ANSI colour codes
         if errstr:
             print("\n\n{0}\n\n".format(errstr))
-            sublime.message_dialog("elm-format failed. See console.")
+            sublime.set_timeout(lambda: sublime.status_message("ELM-FORMAT FAILED - SEE CONSOLE"), 100)
         else:
             self.view.replace(edit, region, stdout.decode('UTF-8'))
             self.view.window().run_command("hide_panel", {"panel": "output.elm_format"})
