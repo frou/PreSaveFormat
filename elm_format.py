@@ -16,7 +16,7 @@ class ElmFormatCommand(sublime_plugin.TextCommand):
         content = self.view.substr(region)
 
         stdout, stderr = subprocess.Popen(
-            ["elm-format", '--stdin', '--yes', '--elm-version=0.19'],
+            ["elm-format", '--stdin', '--yes'],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
