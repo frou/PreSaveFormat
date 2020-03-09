@@ -6,13 +6,13 @@
         "id": "package-settings",
         "children": [
           {
-            "caption": "Elm Format on Save",
+            "caption": "ElmFormatPreSave",
             "children": [
               {
                 "caption": "Settings",
                 "command": "edit_settings",
                 "args": {
-                  "base_file": "${packages}/elm-format-on-save/elm-format-on-save.sublime-settings",
+                  "base_file": "${packages}/elm-format-on-save/ElmFormatPreSave.sublime-settings",
                   "default": "{\n\t$0\n}\n"
                 }
               }

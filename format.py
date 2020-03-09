@@ -74,7 +74,7 @@ class ElmFormat(sublime_plugin.TextCommand):
 
 class ElmFormatPreSave(sublime_plugin.ViewEventListener):
 
-    SETTINGS_BASENAME = "elm-format-on-save.sublime-settings"
+    SETTINGS_BASENAME = "ElmFormatPreSave.sublime-settings"
     SETTINGS_KEY_ENABLED = "enabled"
     SETTINGS_KEY_INCLUDE = "include"
     SETTINGS_KEY_EXCLUDE = "exclude"
