@@ -102,6 +102,7 @@ class ElmFormatPreSave(sublime_plugin.ViewEventListener):
             return on_save
         elif isinstance(on_save, dict):
             # @todo #0 Use Python stdlib "glob" rather than basic substring matching.
+            #  And update the big comment in the default settings file to reflect how this code acts.
             included = [
                 fragment in path
                 for fragment in on_save.get(self.SETTINGS_KEY_INCLUDING)
