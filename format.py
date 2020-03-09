@@ -75,9 +75,9 @@ class ElmFormat(sublime_plugin.TextCommand):
 class ElmFormatPreSave(sublime_plugin.ViewEventListener):
 
     SETTINGS_BASENAME = "elm-format-on-save.sublime-settings"
-    SETTINGS_KEY_ONSAVE = "on_save"
-    SETTINGS_KEY_INCLUDING = "including"
-    SETTINGS_KEY_EXCLUDING = "excluding"
+    SETTINGS_KEY_ENABLED = "enabled"
+    SETTINGS_KEY_INCLUDE = "include"
+    SETTINGS_KEY_EXCLUDE = "exclude"
 
     # Overrides --------------------------------------------------
 
@@ -96,25 +96,22 @@ class ElmFormatPreSave(sublime_plugin.ViewEventListener):
 
     def should_format(self, path):
         settings = sublime.load_settings(self.SETTINGS_BASENAME)
-        on_save = settings.get(self.SETTINGS_KEY_ONSAVE, True)
-
-        if isinstance(on_save, bool):
-            return on_save
-        elif isinstance(on_save, dict):
-            # @todo #0 Use Python stdlib "glob" rather than basic substring matching.
-            #  And update the big comment in the default settings file to reflect how this code acts.
-            included = [
-                fragment in path
-                for fragment in on_save.get(self.SETTINGS_KEY_INCLUDING)
-            ]
-            excluded = [
-                fragment in path
-                for fragment in on_save.get(self.SETTINGS_KEY_EXCLUDING)
-            ]
-            return any(included) and not any(excluded)
-        else:
+        enabled = settings.get(self.SETTINGS_KEY_ENABLED)
+        if enabled is None:
             raise Exception(
-                '"{0}" in "{1}" has an invalid value'.format(
-                    self.SETTINGS_KEY_ONSAVE, self.SETTINGS_BASENAME
+                '"{0}" should have an "{1}" key'.format(
+                    self.SETTINGS_BASENAME, self.SETTINGS_KEY_ENABLED
                 )
             )
+        if not enabled:
+            return False
+
+        # @todo #0 Use Python stdlib "glob" rather than basic substring matching.
+        #  And add a comment in the default settings file explaining the logic.
+        include_hits = [
+            fragment in path for fragment in settings.get(self.SETTINGS_KEY_INCLUDE)
+        ]
+        exclude_hits = [
+            fragment in path for fragment in settings.get(self.SETTINGS_KEY_EXCLUDE)
+        ]
+        return any(include_hits) and not any(exclude_hits)
