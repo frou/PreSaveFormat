@@ -6,9 +6,8 @@ import subprocess
 import sys
 
 
-class ElmFormat(sublime_plugin.TextCommand):
+class PreSaveFormat(sublime_plugin.TextCommand):
 
-    COMMAND_LINE = ["elm-format", "--stdin", "--yes"]
     TXT_ENCODING = "utf-8"
 
     # Overrides --------------------------------------------------
@@ -25,8 +24,13 @@ class ElmFormat(sublime_plugin.TextCommand):
         view_region = sublime.Region(0, self.view.size())
         view_content = self.view.substr(view_region)
 
+        lang_spec = PreSaveListener.HANDLED_SYNTAXES[self.view.settings().get("syntax")]
+        cmd_line = lang_spec["command_line"].copy()
+        if lang_spec["add_file_arg"]:
+            cmd_line.append(self.view.file_name())
+
         child_proc = subprocess.Popen(
-            self.COMMAND_LINE,
+            cmd_line,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -47,7 +51,7 @@ class ElmFormat(sublime_plugin.TextCommand):
             print("\n\n{0}\n\n".format(stderr_content))  # noqa: T001
             sublime.set_timeout(
                 lambda: sublime.status_message(
-                    "{0} failed - see console".format(self.COMMAND_LINE[0]).upper()
+                    "{0} failed - see console".format(cmd_line[0]).upper()
                 ),
                 100,
             )
@@ -56,7 +60,7 @@ class ElmFormat(sublime_plugin.TextCommand):
         if not len(stdout_content):
             raise Exception(
                 "{0} produced no output despite exiting successfully".format(
-                    self.COMMAND_LINE[0]
+                    cmd_line[0]
                 )
             )
         self.view.replace(edit, view_region, stdout_content)
@@ -72,23 +76,40 @@ class ElmFormat(sublime_plugin.TextCommand):
             return None
 
 
-class ElmFormatPreSave(sublime_plugin.ViewEventListener):
+class PreSaveListener(sublime_plugin.ViewEventListener):
 
     SETTINGS_BASENAME = "ElmFormatPreSave.sublime-settings"
     SETTINGS_KEY_ENABLED = "enabled"
     SETTINGS_KEY_INCLUDE = "include"
     SETTINGS_KEY_EXCLUDE = "exclude"
 
+    # @todo #0 Move this datastructure into the settings file
+    HANDLED_SYNTAXES = {
+        "Packages/ElmFeather/Elm.tmLanguage": {
+            "command_line": ["elm-format", "--stdin", "--yes"],
+            "add_file_arg": False,
+        },
+        "Packages/Humps/OCaml.sublime-syntax": {
+            "command_line": [
+                "ocamlformat",
+                "-",  # Read from stdin, not the named file.
+                "--enable-outside-detected-project",
+                "--name",
+            ],
+            "add_file_arg": True,
+        },
+    }
+
     # Overrides --------------------------------------------------
 
     @classmethod
     def is_applicable(cls, settings):
-        return settings.get("syntax") == "Packages/ElmFeather/Elm.tmLanguage"
+        return settings.get("syntax") in cls.HANDLED_SYNTAXES
 
     def on_pre_save(self):
         try:
             if self.should_format(self.view.file_name()):
-                self.view.run_command("elm_format")
+                self.view.run_command("pre_save_format")
         except Exception as e:
             sublime.error_message(str(e))
 
