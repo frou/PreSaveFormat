@@ -78,9 +78,7 @@ class PreSaveFormat(sublime_plugin.TextCommand):
 
 class PreSaveListener(sublime_plugin.ViewEventListener):
 
-    PKG_SETTINGS_BASENAME = "{0}.sublime-settings".format(
-        PreSaveFormat.__class__.__name__
-    )
+    PKG_SETTINGS_BASENAME = "{0}.sublime-settings".format(PreSaveFormat.__name__)
     PKG_SETTINGS = sublime.load_settings(PKG_SETTINGS_BASENAME)
     PKG_SETTINGS_KEY_ENABLED = "enabled"
     PKG_SETTINGS_KEY_INCLUDE = "include"
