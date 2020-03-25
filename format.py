@@ -88,14 +88,11 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
 
     @classmethod
     def is_applicable(cls, settings):
-        syntax_path = cls.get_syntax_path(settings)
-        lang_settings = cls.PKG_SETTINGS.get(syntax_path)
-        return lang_settings is not None
+        return cls.settings_for_view_language(settings) is not None
 
     def on_pre_save(self):
         try:
-            syntax_path = self.get_syntax_path(self.view)
-            lang_settings = self.PKG_SETTINGS.get(syntax_path)
+            lang_settings = self.settings_for_view_language(self.view.settings())
             if self.should_format(self.view.file_name(), lang_settings):
                 self.view.run_command("pre_save_format", lang_settings)
         except Exception as e:
@@ -104,10 +101,9 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
     # ------------------------------------------------------------
 
     @classmethod
-    def get_syntax_path(cls, settings):
-        if isinstance(settings, sublime.View):
-            settings = settings.settings()
-        return settings.get("syntax")
+    def settings_for_view_language(cls, view_settings):
+        view_syntax_path = view_settings.get("syntax")
+        return cls.PKG_SETTINGS.get(view_syntax_path)
 
     def should_format(self, path, lang_settings):
         if not lang_settings.get(self.PKG_SETTINGS_KEY_ENABLED, True):
