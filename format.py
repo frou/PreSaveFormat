@@ -12,25 +12,23 @@ class PreSaveFormat(sublime_plugin.TextCommand):
 
     # Overrides --------------------------------------------------
 
-    def run(self, edit):
+    def run(self, edit, command_line, append_file_path_to_command_line, **_):
         try:
-            self.run_core(edit)
+            self.run_core(edit, command_line, append_file_path_to_command_line)
         except Exception as e:
             sublime.error_message(str(e))
 
     # ------------------------------------------------------------
 
-    def run_core(self, edit):
+    def run_core(self, edit, command_line, append_file_path_to_command_line):
         view_region = sublime.Region(0, self.view.size())
         view_content = self.view.substr(view_region)
 
-        lang_spec = PreSaveListener.HANDLED_SYNTAXES[self.view.settings().get("syntax")]
-        cmd_line = lang_spec["command_line"].copy()
-        if lang_spec["add_file_arg"]:
-            cmd_line.append(self.view.file_name())
+        if append_file_path_to_command_line:
+            command_line.append(self.view.file_name())
 
         child_proc = subprocess.Popen(
-            cmd_line,
+            command_line,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -41,17 +39,14 @@ class PreSaveFormat(sublime_plugin.TextCommand):
         )
         stdout_content, stderr_content = (
             stdout_content.decode(self.TXT_ENCODING),
-            stderr_content.decode(self.TXT_ENCODING),
+            self.postprocess_stderr(stderr_content.decode(self.TXT_ENCODING)),
         )
 
         if child_proc.returncode != 0:
-            # Remove any ANSI colour codes
-            stderr_content = re.sub("\x1b\\[\\d{1,2}m", "", stderr_content)
-            stderr_content = stderr_content.strip()
             print("\n\n{0}\n\n".format(stderr_content))  # noqa: T001
             sublime.set_timeout(
                 lambda: sublime.status_message(
-                    "{0} failed - see console".format(cmd_line[0]).upper()
+                    "{0} failed - see console".format(command_line[0]).upper()
                 ),
                 100,
             )
@@ -60,10 +55,15 @@ class PreSaveFormat(sublime_plugin.TextCommand):
         if not len(stdout_content):
             raise Exception(
                 "{0} produced no output despite exiting successfully".format(
-                    cmd_line[0]
+                    command_line[0]
                 )
             )
         self.view.replace(edit, view_region, stdout_content)
+
+    def postprocess_stderr(self, s):
+        # Remove ANSI colour codes
+        s = re.sub("\x1b\\[\\d{1,2}m", "", s)
+        return s.strip()
 
     def platform_startupinfo(self):
         if sys.platform == "win32":
@@ -78,61 +78,50 @@ class PreSaveFormat(sublime_plugin.TextCommand):
 
 class PreSaveListener(sublime_plugin.ViewEventListener):
 
-    SETTINGS_BASENAME = "ElmFormatPreSave.sublime-settings"
-    SETTINGS_KEY_ENABLED = "enabled"
-    SETTINGS_KEY_INCLUDE = "include"
-    SETTINGS_KEY_EXCLUDE = "exclude"
-
-    # @todo #0 Move this datastructure into the settings file
-    HANDLED_SYNTAXES = {
-        "Packages/ElmFeather/Elm.tmLanguage": {
-            "command_line": ["elm-format", "--stdin", "--yes"],
-            "add_file_arg": False,
-        },
-        "Packages/Humps/OCaml.sublime-syntax": {
-            "command_line": [
-                "ocamlformat",
-                "-",  # Read from stdin, not the named file.
-                "--enable-outside-detected-project",
-                "--name",
-            ],
-            "add_file_arg": True,
-        },
-    }
+    # @todo #0 Use `PreSaveFormat.__class__.__name__` as PKG_SETTINGS_BASENAME
+    PKG_SETTINGS_BASENAME = "{0}.sublime-settings".format("ElmFormatPreSave")
+    PKG_SETTINGS = sublime.load_settings(PKG_SETTINGS_BASENAME)
+    PKG_SETTINGS_KEY_ENABLED = "enabled"
+    PKG_SETTINGS_KEY_INCLUDE = "include"
+    PKG_SETTINGS_KEY_EXCLUDE = "exclude"
 
     # Overrides --------------------------------------------------
 
     @classmethod
     def is_applicable(cls, settings):
-        return settings.get("syntax") in cls.HANDLED_SYNTAXES
+        syntax_path = cls.get_syntax_path(settings)
+        lang_settings = cls.PKG_SETTINGS.get(syntax_path)
+        return lang_settings is not None
 
     def on_pre_save(self):
         try:
-            if self.should_format(self.view.file_name()):
-                self.view.run_command("pre_save_format")
+            syntax_path = self.get_syntax_path(self.view)
+            lang_settings = self.PKG_SETTINGS.get(syntax_path)
+            if self.should_format(self.view.file_name(), lang_settings):
+                self.view.run_command("pre_save_format", lang_settings)
         except Exception as e:
             sublime.error_message(str(e))
 
     # ------------------------------------------------------------
 
-    def should_format(self, path):
-        settings = sublime.load_settings(self.SETTINGS_BASENAME)
-        enabled = settings.get(self.SETTINGS_KEY_ENABLED)
-        if enabled is None:
-            raise Exception(
-                '"{0}" should have an "{1}" key'.format(
-                    self.SETTINGS_BASENAME, self.SETTINGS_KEY_ENABLED
-                )
-            )
-        if not enabled:
+    @classmethod
+    def get_syntax_path(cls, settings):
+        if isinstance(settings, sublime.View):
+            settings = settings.settings()
+        return settings.get("syntax")
+
+    def should_format(self, path, lang_settings):
+        if not lang_settings.get(self.PKG_SETTINGS_KEY_ENABLED, True):
             return False
 
         # @todo #0 Use Python stdlib "glob" rather than basic substring matching.
         #  And add a comment in the default settings file explaining the logic.
         include_hits = [
-            fragment in path for fragment in settings.get(self.SETTINGS_KEY_INCLUDE)
+            fragment in path
+            for fragment in lang_settings.get(self.PKG_SETTINGS_KEY_INCLUDE)
         ]
         exclude_hits = [
-            fragment in path for fragment in settings.get(self.SETTINGS_KEY_EXCLUDE)
+            fragment in path
+            for fragment in lang_settings.get(self.PKG_SETTINGS_KEY_EXCLUDE)
         ]
         return any(include_hits) and not any(exclude_hits)

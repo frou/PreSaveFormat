@@ -1,6 +1,27 @@
 {
-    "enabled": true,
+    "Packages/ElmFeather/Elm.tmLanguage": {
+        "enabled": true,
 
-    "include": ["/"],
-    "exclude": [],
+        "command_line": ["elm-format", "--stdin", "--yes"],
+        "append_file_path_to_command_line": false,
+
+        "include": ["/"],
+        "exclude": []
+    },
+    "Packages/Humps/OCaml.sublime-syntax": {
+        "enabled": true,
+
+        "command_line": [
+            "ocamlformat",
+            "--enable-outside-detected-project",
+            // This is an instruction to read the source code from stdin.
+            "-",
+            // The name (path) given will only be used in error messages.
+            "--name",
+        ],
+        "append_file_path_to_command_line": true,
+
+        "include": ["/"],
+        "exclude": []
+    }
 }
