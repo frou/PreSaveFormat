@@ -78,8 +78,9 @@ class PreSaveFormat(sublime_plugin.TextCommand):
 
 class PreSaveListener(sublime_plugin.ViewEventListener):
 
-    # @todo #0 Use `PreSaveFormat.__class__.__name__` as PKG_SETTINGS_BASENAME
-    PKG_SETTINGS_BASENAME = "{0}.sublime-settings".format("ElmFormatPreSave")
+    PKG_SETTINGS_BASENAME = "{0}.sublime-settings".format(
+        PreSaveFormat.__class__.__name__
+    )
     PKG_SETTINGS = sublime.load_settings(PKG_SETTINGS_BASENAME)
     PKG_SETTINGS_KEY_ENABLED = "enabled"
     PKG_SETTINGS_KEY_INCLUDE = "include"
