@@ -1,4 +1,7 @@
 {
+    // @todo #0 Have root-level include/exclude keys in the settings file that
+    //  can optionally be overriden for individual languages.
+
     "Packages/ElmFeather/Elm.tmLanguage": {
         "enabled": true,
 
