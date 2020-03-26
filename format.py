@@ -23,6 +23,7 @@ class PreSaveFormat(sublime_plugin.TextCommand):
     def run_core(self, edit, command_line, append_file_path_to_command_line):
         view_region = sublime.Region(0, self.view.size())
         view_content = self.view.substr(view_region)
+        view_content_started_empty = len(view_content) == 0
 
         view_file_path = self.view.file_name()
         if append_file_path_to_command_line:
@@ -62,12 +63,10 @@ class PreSaveFormat(sublime_plugin.TextCommand):
             )
             return
 
-        # @todo #0 Don't complain about no stdout content if the view content was empty
-        #  to start with.
-        if not len(stdout_content):
+        if not len(stdout_content) and not view_content_started_empty:
             raise Exception(
-                "{0} produced no output despite exiting successfully".format(
-                    command_line[0]
+                "[{0}] '{1}' command produced no output despite exiting successfully.".format(
+                    PreSaveFormat.__name__, command_line[0]
                 )
             )
         self.view.replace(edit, view_region, stdout_content)
