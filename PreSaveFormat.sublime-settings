@@ -45,6 +45,7 @@
     "Packages/Python/Python.sublime-syntax": {
         "enabled": true,
 
+        // @todo #0 Once on ST4, use black's flag: --target-version py38
         "command_line": ["black", "-q", "-"],
         "append_file_path_to_command_line": false,
 
