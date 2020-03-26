@@ -65,7 +65,8 @@ class PreSaveFormat(sublime_plugin.TextCommand):
 
         if not len(stdout_content) and not view_content_started_empty:
             raise Exception(
-                "[{0}] '{1}' command produced no output despite exiting successfully.".format(
+                "[{0}] '{1}' command produced no output "
+                "despite exiting successfully.".format(
                     PreSaveFormat.__name__, command_line[0]
                 )
             )
