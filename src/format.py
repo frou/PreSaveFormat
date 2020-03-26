@@ -5,7 +5,7 @@ from .sublime_extra import platform_startupinfo, command_name_from_class
 import re
 import subprocess
 
-from .settings import (
+from .pkg_settings import (
     pkg_settings,
     PKG_SETTINGS_KEY_ENABLED,
     PKG_SETTINGS_KEY_INCLUDE,
@@ -37,7 +37,7 @@ class PreSaveFormat(sublime_plugin.TextCommand):
             command_line.append(view_file_path)
 
         print(  # noqa: T001
-            "[{0}] Running {1} with view content from {2}".format(
+            "[{0}] Running {1} fed with content of view {2}".format(
                 PreSaveFormat.__name__, command_line, view_file_path
             )
         )
