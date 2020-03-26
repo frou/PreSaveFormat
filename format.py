@@ -27,6 +27,7 @@ class PreSaveFormat(sublime_plugin.TextCommand):
         if append_file_path_to_command_line:
             command_line.append(self.view.file_name())
 
+        # print(command_line)
         child_proc = subprocess.Popen(
             command_line,
             stdin=subprocess.PIPE,
@@ -52,6 +53,7 @@ class PreSaveFormat(sublime_plugin.TextCommand):
             )
             return
 
+        # @todo #0 Don't complain about no stdout content if the view content was empty to start with.
         if not len(stdout_content):
             raise Exception(
                 "{0} produced no output despite exiting successfully".format(

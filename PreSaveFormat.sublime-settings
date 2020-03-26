@@ -8,6 +8,8 @@
         "include": ["/"],
         "exclude": []
     },
+
+
     "Packages/Humps/OCaml.sublime-syntax": {
         "enabled": true,
 
@@ -23,5 +25,16 @@
 
         "include": ["/"],
         "exclude": []
-    }
+    },
+
+
+    "Packages/Clojure/Clojure.sublime-syntax": {
+        "enabled": true,
+
+        "command_line": ["zprintm", "{:style :community}"],
+        "append_file_path_to_command_line": false,
+
+        "include": ["/"],
+        "exclude": []
+    },
 }
