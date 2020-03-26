@@ -37,4 +37,15 @@
         "include": ["/"],
         "exclude": []
     },
+
+
+    "Packages/Python/Python.sublime-syntax": {
+        "enabled": true,
+
+        "command_line": ["black", "-q", "-"],
+        "append_file_path_to_command_line": false,
+
+        "include": ["/"],
+        "exclude": []
+    },
 }
