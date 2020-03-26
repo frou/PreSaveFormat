@@ -1,9 +1,9 @@
 import sublime
 import sublime_plugin
+from .sublime_extra import platform_startupinfo, pascal_to_snake_case
 
 import re
 import subprocess
-import sys
 
 from .settings import (
     pkg_settings,
@@ -46,7 +46,7 @@ class PreSaveFormat(sublime_plugin.TextCommand):
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            startupinfo=self.platform_startupinfo(),
+            startupinfo=platform_startupinfo(),
         )
         stdout_content, stderr_content = child_proc.communicate(
             input=bytes(view_content, self.TXT_ENCODING)
@@ -84,16 +84,6 @@ class PreSaveFormat(sublime_plugin.TextCommand):
         s = re.sub("\x1b\\[\\d{1,2}m", "", s)
         return s.strip()
 
-    def platform_startupinfo(self):
-        if sys.platform == "win32":
-            si = subprocess.STARTUPINFO()
-            # Stop a visible console window from appearing.
-            si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-            si.wShowWindow = subprocess.SW_HIDE
-            return si
-        else:
-            return None
-
 
 class PreSaveListener(sublime_plugin.ViewEventListener):
 
@@ -107,7 +97,9 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
         try:
             lang_settings = self.settings_for_view_language(self.view.settings())
             if self.should_format(self.view.file_name(), lang_settings):
-                self.view.run_command("pre_save_format", lang_settings)
+                self.view.run_command(
+                    pascal_to_snake_case(PreSaveFormat), lang_settings
+                )
         except Exception as e:
             sublime.error_message(str(e))
 
