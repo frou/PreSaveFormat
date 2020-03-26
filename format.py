@@ -44,11 +44,11 @@ class PreSaveFormat(sublime_plugin.TextCommand):
         )
 
         if child_proc.returncode != 0:
-            print(
+            print(  # noqa: T001
                 "\n\n*** [{0}] stderr of `{1}` was:\n\n{2}\n\n".format(
                     PreSaveFormat.__name__, command_line[0], stderr_content
                 )
-            )  # noqa: T001
+            )
             sublime.set_timeout(
                 lambda: sublime.status_message(
                     "{0} failed - see console".format(command_line[0]).upper()
@@ -57,7 +57,8 @@ class PreSaveFormat(sublime_plugin.TextCommand):
             )
             return
 
-        # @todo #0 Don't complain about no stdout content if the view content was empty to start with.
+        # @todo #0 Don't complain about no stdout content if the view content was empty
+        #  to start with.
         if not len(stdout_content):
             raise Exception(
                 "{0} produced no output despite exiting successfully".format(
