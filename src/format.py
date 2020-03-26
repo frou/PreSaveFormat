@@ -1,6 +1,6 @@
 import sublime
 import sublime_plugin
-from .sublime_extra import platform_startupinfo, pascal_to_snake_case
+from .sublime_extra import platform_startupinfo, command_name_from_class
 
 import re
 import subprocess
@@ -98,7 +98,7 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
             lang_settings = self.settings_for_view_language(self.view.settings())
             if self.should_format(self.view.file_name(), lang_settings):
                 self.view.run_command(
-                    pascal_to_snake_case(PreSaveFormat), lang_settings
+                    command_name_from_class(PreSaveFormat), lang_settings
                 )
         except Exception as e:
             sublime.error_message(str(e))
