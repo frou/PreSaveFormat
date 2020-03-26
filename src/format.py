@@ -5,6 +5,13 @@ import re
 import subprocess
 import sys
 
+from .settings import (
+    pkg_settings,
+    PKG_SETTINGS_KEY_ENABLED,
+    PKG_SETTINGS_KEY_INCLUDE,
+    PKG_SETTINGS_KEY_EXCLUDE,
+)
+
 
 class PreSaveFormat(sublime_plugin.TextCommand):
 
@@ -90,15 +97,6 @@ class PreSaveFormat(sublime_plugin.TextCommand):
 
 class PreSaveListener(sublime_plugin.ViewEventListener):
 
-    PKG_SETTINGS_BASENAME = "{0}.sublime-settings".format(PreSaveFormat.__name__)
-    # @todo #0 The API docs make it sound like using sublime.load_settings(...) once
-    #  returns a live object that will reflect the settings file on disk changing,
-    #  but that doesn't always seem to be the case.
-    PKG_SETTINGS = sublime.load_settings(PKG_SETTINGS_BASENAME)
-    PKG_SETTINGS_KEY_ENABLED = "enabled"
-    PKG_SETTINGS_KEY_INCLUDE = "include"
-    PKG_SETTINGS_KEY_EXCLUDE = "exclude"
-
     # Overrides --------------------------------------------------
 
     @classmethod
@@ -118,20 +116,18 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
     @classmethod
     def settings_for_view_language(cls, view_settings):
         view_syntax_path = view_settings.get("syntax")
-        return cls.PKG_SETTINGS.get(view_syntax_path)
+        return pkg_settings().get(view_syntax_path)
 
     def should_format(self, path, lang_settings):
-        if not lang_settings.get(self.PKG_SETTINGS_KEY_ENABLED, True):
+        if not lang_settings.get(PKG_SETTINGS_KEY_ENABLED, True):
             return False
 
         # @todo #0 Use Python stdlib "glob" rather than basic substring matching.
         #  And add a comment in the default settings file explaining the logic.
         include_hits = [
-            fragment in path
-            for fragment in lang_settings.get(self.PKG_SETTINGS_KEY_INCLUDE)
+            fragment in path for fragment in lang_settings.get(PKG_SETTINGS_KEY_INCLUDE)
         ]
         exclude_hits = [
-            fragment in path
-            for fragment in lang_settings.get(self.PKG_SETTINGS_KEY_EXCLUDE)
+            fragment in path for fragment in lang_settings.get(PKG_SETTINGS_KEY_EXCLUDE)
         ]
         return any(include_hits) and not any(exclude_hits)
