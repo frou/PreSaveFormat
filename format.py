@@ -44,7 +44,11 @@ class PreSaveFormat(sublime_plugin.TextCommand):
         )
 
         if child_proc.returncode != 0:
-            print("\n\n{0}\n\n".format(stderr_content))  # noqa: T001
+            print(
+                "\n\n*** [{0}] stderr of `{1}` was:\n\n{2}\n\n".format(
+                    PreSaveFormat.__name__, command_line[0], stderr_content
+                )
+            )  # noqa: T001
             sublime.set_timeout(
                 lambda: sublime.status_message(
                     "{0} failed - see console".format(command_line[0]).upper()
@@ -81,6 +85,9 @@ class PreSaveFormat(sublime_plugin.TextCommand):
 class PreSaveListener(sublime_plugin.ViewEventListener):
 
     PKG_SETTINGS_BASENAME = "{0}.sublime-settings".format(PreSaveFormat.__name__)
+    # @todo #0 The API docs make it sound like using sublime.load_settings(...) once
+    #  returns a live object that will reflect the settings file on disk changing,
+    #  but that doesn't always seem to be the case.
     PKG_SETTINGS = sublime.load_settings(PKG_SETTINGS_BASENAME)
     PKG_SETTINGS_KEY_ENABLED = "enabled"
     PKG_SETTINGS_KEY_INCLUDE = "include"
