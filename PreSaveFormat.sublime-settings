@@ -48,4 +48,14 @@
         "include": ["/"],
         "exclude": []
     },
+
+    "Packages/Go/Go.sublime-syntax": {
+        "enabled": true,
+
+        "command_line": ["goimports", "--srcdir"],
+        "append_file_path_to_command_line": true,
+
+        "include": ["/"],
+        "exclude": []
+    },
 }
