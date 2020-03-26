@@ -1,0 +1,3 @@
+[submodule "src/sublime_extra"]
+	path = src/sublime_extra
+	url = https://github.com/frou/sublime_extra.git
