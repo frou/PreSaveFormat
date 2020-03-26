@@ -24,10 +24,15 @@ class PreSaveFormat(sublime_plugin.TextCommand):
         view_region = sublime.Region(0, self.view.size())
         view_content = self.view.substr(view_region)
 
+        view_file_path = self.view.file_name()
         if append_file_path_to_command_line:
-            command_line.append(self.view.file_name())
+            command_line.append(view_file_path)
 
-        # print(command_line)
+        print(  # noqa: T001
+            "[{0}] Running {1} with view content from {2}".format(
+                PreSaveFormat.__name__, command_line, view_file_path
+            )
+        )
         child_proc = subprocess.Popen(
             command_line,
             stdin=subprocess.PIPE,
