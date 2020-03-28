@@ -27,7 +27,7 @@
         "append_file_path_to_command_line": true,
 
         "include": ["/"],
-        "exclude": []
+        "exclude": ["/syntax_test.ml"]
     },
 
 
