@@ -19,11 +19,20 @@
         "command_line": [
             "ocamlformat",
             "--enable-outside-detected-project",
-            // This is an instruction to read the source code from stdin.
+
+            // REF: "ocamlformat_profile" in: https://github.com/ocaml-ppx/ocamlformat/blob/master/lib/Conf.ml
+            "--profile", "ocamlformat",
+            // REF: $ man ocamlformat
+            "--exp-grouping", "preserve",
+            "--sequence-blank-line", "preserve-one",
+            "--type-decl", "sparse",
+            "--field-space", "loose",
+
+            // Read from stdin rather than the filesystem.
             "-",
-            // Treat files without a .ml or .mli extension as .ml
+            // Treat file basenames without an .ml or .mli extension as if they had .ml
             "--impl",
-            // The name (path) given will only be used in error messages.
+            // The path of the file that's being written to stdin. Used in error messages etc.
             "--name",
         ],
         "append_file_path_to_command_line": true,
