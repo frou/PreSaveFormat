@@ -21,6 +21,8 @@
             "--enable-outside-detected-project",
             // This is an instruction to read the source code from stdin.
             "-",
+            // Treat files without a .ml or .mli extension as .ml
+            "--impl",
             // The name (path) given will only be used in error messages.
             "--name",
         ],
