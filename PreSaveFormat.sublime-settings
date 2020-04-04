@@ -110,4 +110,24 @@
         "include": ["/"],
         "exclude": []
     },
+
+    "Packages/XML/XML.sublime-syntax": {
+        "enabled": true,
+
+        "command": ["xmllint", "--format", "-"],
+        "append_file_path_to_command": false,
+
+        "include": ["/"],
+        "exclude": []
+    },
+
+    "Packages/HTML/HTML.sublime-syntax": {
+        "enabled": true,
+
+        "command": ["js-beautify", "--type", "html", "--indent-with-tabs", "--indent-inner-html", "--indent-handlebars", "--max-preserve-newlines", "1", "--end-with-newline", "--extra_liners", "", "--indent-scripts", "keep", "--wrap-attributes", "preserve-aligned"],
+        "append_file_path_to_command": false,
+
+        "include": ["/"],
+        "exclude": []
+    },
 }
