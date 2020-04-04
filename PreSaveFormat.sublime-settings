@@ -100,4 +100,14 @@
         "include": ["/"],
         "exclude": []
     },
+
+    "Packages/TypeScript-TmLanguage/TypeScript.tmLanguage": {
+        "enabled": true,
+
+        "command": ["prettier", "--no-config", "--print-width", "79", "--no-semi", "--trailing-comma", "all", "--stdin-filepath"],
+        "append_file_path_to_command": true,
+
+        "include": ["/"],
+        "exclude": []
+    },
 }
