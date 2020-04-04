@@ -130,4 +130,14 @@
         "include": ["/"],
         "exclude": []
     },
+
+    "Packages/CSS/CSS.sublime-syntax": {
+        "enabled": true,
+
+        "command": ["csscomb", "-v"],
+        "append_file_path_to_command": false,
+
+        "include": ["/"],
+        "exclude": []
+    },
 }
