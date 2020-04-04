@@ -101,6 +101,16 @@
         "exclude": []
     },
 
+    "Packages/JavaScript/JavaScript.sublime-syntax": {
+        "enabled": true,
+
+        "command": ["prettier", "--no-config", "--print-width", "79", "--no-semi", "--trailing-comma", "all", "--stdin-filepath"],
+        "append_file_path_to_command": true,
+
+        "include": ["/"],
+        "exclude": []
+    },
+
     "Packages/TypeScript-TmLanguage/TypeScript.tmLanguage": {
         "enabled": true,
 
@@ -136,6 +146,28 @@
 
         "command": ["csscomb", "-v"],
         "append_file_path_to_command": false,
+
+        "include": ["/"],
+        "exclude": []
+    },
+
+    "Packages/C++/C.sublime-syntax": {
+        "enabled": true,
+
+        // `--style file` causes the nearest `.clang-format` file to be consulted.
+        "command": ["/usr/local/opt/llvm/bin/clang-format", "--style", "file", "--assume-filename"],
+        "append_file_path_to_command": true,
+
+        "include": ["/"],
+        "exclude": []
+    },
+
+    "Packages/C++/C++.sublime-syntax": {
+        "enabled": true,
+
+        // `--style file` causes the nearest `.clang-format` file to be consulted.
+        "command": ["/usr/local/opt/llvm/bin/clang-format", "--style", "file", "--assume-filename"],
+        "append_file_path_to_command": true,
 
         "include": ["/"],
         "exclude": []
