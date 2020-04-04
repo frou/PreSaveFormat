@@ -5,8 +5,8 @@
     "Packages/ElmFeather/Elm.tmLanguage": {
         "enabled": true,
 
-        "command_line": ["elm-format", "--stdin", "--yes"],
-        "append_file_path_to_command_line": false,
+        "command": ["elm-format", "--stdin", "--yes"],
+        "append_file_path_to_command": false,
 
         "include": ["/"],
         "exclude": []
@@ -15,7 +15,7 @@
     "Packages/Humps/OCaml.sublime-syntax": {
         "enabled": true,
 
-        "command_line": [
+        "command": [
             "ocamlformat",
             "--enable-outside-detected-project",
 
@@ -34,7 +34,7 @@
             // The path of the file that's being written to stdin. Used in error messages etc.
             "--name",
         ],
-        "append_file_path_to_command_line": true,
+        "append_file_path_to_command": true,
 
         "include": ["/"],
         "exclude": ["/syntax_test.ml"]
@@ -43,8 +43,8 @@
     "Packages/Clojure/Clojure.sublime-syntax": {
         "enabled": true,
 
-        "command_line": ["zprintm", "{:style :community}"],
-        "append_file_path_to_command_line": false,
+        "command": ["zprintm", "{:style :community}"],
+        "append_file_path_to_command": false,
 
         "include": ["/"],
         "exclude": []
@@ -54,8 +54,8 @@
         "enabled": true,
 
         // @todo #0 Once on ST4, use black's flag: --target-version py38
-        "command_line": ["black", "-q", "-"],
-        "append_file_path_to_command_line": false,
+        "command": ["black", "-q", "-"],
+        "append_file_path_to_command": false,
 
         "include": ["/"],
         "exclude": []
@@ -64,8 +64,8 @@
     "Packages/Go/Go.sublime-syntax": {
         "enabled": true,
 
-        "command_line": ["goimports", "--srcdir"],
-        "append_file_path_to_command_line": true,
+        "command": ["goimports", "--srcdir"],
+        "append_file_path_to_command": true,
 
         "include": ["/"],
         "exclude": []
@@ -74,8 +74,8 @@
     "Packages/ShellScript/Bash.sublime-syntax": {
         "enabled": true,
 
-        "command_line": ["shfmt", "-ci"],
-        "append_file_path_to_command_line": false,
+        "command": ["shfmt", "-ci"],
+        "append_file_path_to_command": false,
 
         "include": ["/"],
         "exclude": []
@@ -84,8 +84,8 @@
     "Packages/JavaScript/JSON.sublime-syntax": {
         "enabled": true,
 
-        "command_line": ["fx", "this"],
-        "append_file_path_to_command_line": false,
+        "command": ["fx", "this"],
+        "append_file_path_to_command": false,
 
         "include": ["/"],
         "exclude": []
@@ -94,8 +94,8 @@
     "Packages/PostgreSQL Syntax Highlighting/PostgreSQL.tmLanguage": {
         "enabled": true,
 
-        "command_line": ["pg_format", "--comma-start", "--function-case", "1", "--keyword-case", "2", "-"],
-        "append_file_path_to_command_line": false,
+        "command": ["pg_format", "--comma-start", "--function-case", "1", "--keyword-case", "2", "-"],
+        "append_file_path_to_command": false,
 
         "include": ["/"],
         "exclude": []

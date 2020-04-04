@@ -19,30 +19,30 @@ class PreSaveFormat(sublime_plugin.TextCommand):
 
     # Overrides --------------------------------------------------
 
-    def run(self, edit, command_line, append_file_path_to_command_line, **_):
+    def run(self, edit, command, append_file_path_to_command, **_):
         try:
-            self.run_core(edit, command_line, append_file_path_to_command_line)
+            self.run_core(edit, command, append_file_path_to_command)
         except Exception as e:
             sublime.error_message(str(e))
 
     # ------------------------------------------------------------
 
-    def run_core(self, edit, command_line, append_file_path_to_command_line):
+    def run_core(self, edit, command, append_file_path_to_command):
         view_region = sublime.Region(0, self.view.size())
         view_content = self.view.substr(view_region)
         view_content_started_empty = len(view_content) == 0
 
         view_file_path = self.view.file_name()
-        if append_file_path_to_command_line:
-            command_line.append(view_file_path)
+        if append_file_path_to_command:
+            command.append(view_file_path)
 
         print(  # noqa: T001
             "[{0}] Running {1} fed with content of view {2}".format(
-                PreSaveFormat.__name__, command_line, view_file_path
+                PreSaveFormat.__name__, command, view_file_path
             )
         )
         child_proc = subprocess.Popen(
-            command_line,
+            command,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -59,12 +59,12 @@ class PreSaveFormat(sublime_plugin.TextCommand):
         if child_proc.returncode != 0:
             print(  # noqa: T001
                 "\n\n*** [{0}] stderr of `{1}` was:\n\n{2}\n\n".format(
-                    PreSaveFormat.__name__, command_line[0], stderr_content
+                    PreSaveFormat.__name__, command[0], stderr_content
                 )
             )
             sublime.set_timeout(
                 lambda: sublime.status_message(
-                    "{0} failed - see console".format(command_line[0]).upper()
+                    "{0} failed - see console".format(command[0]).upper()
                 ),
                 100,
             )
@@ -74,7 +74,7 @@ class PreSaveFormat(sublime_plugin.TextCommand):
             raise Exception(
                 "[{0}] '{1}' command produced no output "
                 "despite exiting successfully.".format(
-                    PreSaveFormat.__name__, command_line[0]
+                    PreSaveFormat.__name__, command[0]
                 )
             )
         self.view.replace(edit, view_region, stdout_content)
