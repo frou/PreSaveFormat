@@ -1,175 +1,22 @@
+// @todo #0 Have root-level include/exclude keys in the settings file that
+//  can optionally be overriden for individual languages.
 {
-    // @todo #0 Have root-level include/exclude keys in the settings file that
-    //  can optionally be overriden for individual languages.
+    // Below is some example configuration to copy-paste then uncomment in your
+    // User settings file that should be open over there --------------------->
 
-    "Packages/ElmFeather/Elm.tmLanguage": {
-        "enabled": true,
+    //"Packages/Elm Syntax Highlighting/elm.sublime-syntax": {
+    //    "enabled": true,
+    //    "command": ["elm-format", "--stdin", "--yes"],
+    //    "append_file_path_to_command": false,
+    //    "include": ["/"],
+    //    "exclude": []
+    //},
 
-        "command": ["elm-format", "--stdin", "--yes"],
-        "append_file_path_to_command": false,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/Humps/OCaml.sublime-syntax": {
-        "enabled": true,
-
-        "command": [
-            "ocamlformat",
-            "--enable-outside-detected-project",
-
-            // REF: "ocamlformat_profile" in: https://github.com/ocaml-ppx/ocamlformat/blob/master/lib/Conf.ml
-            "--profile", "ocamlformat",
-            // REF: $ man ocamlformat
-            "--exp-grouping", "preserve",
-            "--sequence-blank-line", "preserve-one",
-            "--type-decl", "sparse",
-            "--field-space", "loose",
-
-            // Read from stdin rather than the filesystem.
-            "-",
-            // Treat file basenames without an .ml or .mli extension as if they had .ml
-            "--impl",
-            // The path of the file that's being written to stdin. Used in error messages etc.
-            "--name",
-        ],
-        "append_file_path_to_command": true,
-
-        "include": ["/"],
-        "exclude": ["/syntax_test.ml"]
-    },
-
-    "Packages/Clojure/Clojure.sublime-syntax": {
-        "enabled": true,
-
-        "command": ["zprintm", "{:style :community}"],
-        "append_file_path_to_command": false,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/Python/Python.sublime-syntax": {
-        "enabled": true,
-
-        // @todo #0 Once on ST4, use black's flag: --target-version py38
-        "command": ["black", "-q", "-"],
-        "append_file_path_to_command": false,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/Go/Go.sublime-syntax": {
-        "enabled": true,
-
-        "command": ["goimports", "--srcdir"],
-        "append_file_path_to_command": true,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/ShellScript/Bash.sublime-syntax": {
-        "enabled": true,
-
-        "command": ["shfmt", "-ci"],
-        "append_file_path_to_command": false,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/JavaScript/JSON.sublime-syntax": {
-        "enabled": true,
-
-        "command": ["fx", "this"],
-        "append_file_path_to_command": false,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/PostgreSQL Syntax Highlighting/PostgreSQL.tmLanguage": {
-        "enabled": true,
-
-        "command": ["pg_format", "--comma-start", "--function-case", "1", "--keyword-case", "2", "-"],
-        "append_file_path_to_command": false,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/JavaScript/JavaScript.sublime-syntax": {
-        "enabled": true,
-
-        "command": ["prettier", "--no-config", "--print-width", "79", "--no-semi", "--trailing-comma", "all", "--stdin-filepath"],
-        "append_file_path_to_command": true,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/TypeScript-TmLanguage/TypeScript.tmLanguage": {
-        "enabled": true,
-
-        "command": ["prettier", "--no-config", "--print-width", "79", "--no-semi", "--trailing-comma", "all", "--stdin-filepath"],
-        "append_file_path_to_command": true,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/XML/XML.sublime-syntax": {
-        "enabled": false,
-
-        "command": ["xmllint", "--format", "-"],
-        "append_file_path_to_command": false,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/HTML/HTML.sublime-syntax": {
-        "enabled": true,
-
-        "command": ["js-beautify", "--type", "html", "--indent-with-tabs", "--indent-inner-html", "--indent-handlebars", "--max-preserve-newlines", "1", "--end-with-newline", "--extra_liners", "", "--indent-scripts", "keep", "--wrap-attributes", "preserve-aligned"],
-        "append_file_path_to_command": false,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/CSS/CSS.sublime-syntax": {
-        "enabled": true,
-
-        "command": ["csscomb", "-v"],
-        "append_file_path_to_command": false,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/C++/C.sublime-syntax": {
-        "enabled": true,
-
-        // `--style file` causes the nearest `.clang-format` file to be consulted.
-        "command": ["/usr/local/opt/llvm/bin/clang-format", "--style", "file", "--assume-filename"],
-        "append_file_path_to_command": true,
-
-        "include": ["/"],
-        "exclude": []
-    },
-
-    "Packages/C++/C++.sublime-syntax": {
-        "enabled": true,
-
-        // `--style file` causes the nearest `.clang-format` file to be consulted.
-        "command": ["/usr/local/opt/llvm/bin/clang-format", "--style", "file", "--assume-filename"],
-        "append_file_path_to_command": true,
-
-        "include": ["/"],
-        "exclude": []
-    },
+    //"Packages/Python/Python.sublime-syntax": {
+    //    "enabled": true,
+    //    "command": ["black", "-q", "-"],
+    //    "append_file_path_to_command": false,
+    //    "include": ["/"],
+    //    "exclude": []
+    //},
 }
