@@ -122,7 +122,7 @@
     },
 
     "Packages/XML/XML.sublime-syntax": {
-        "enabled": true,
+        "enabled": false,
 
         "command": ["xmllint", "--format", "-"],
         "append_file_path_to_command": false,
