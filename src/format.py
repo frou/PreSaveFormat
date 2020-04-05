@@ -85,6 +85,11 @@ class PreSaveFormat(sublime_plugin.TextCommand):
         return s.strip()
 
 
+# @todo #0 Key the settings file on pos0 scope selectors (like BuildOnSave) rather than
+#  path of view's syntax definition. That way, stuff like JS & TS, C & C++ can share one
+#  settings block that has an appropriate selector, rather than duplicating blocks.
+
+
 class PreSaveListener(sublime_plugin.ViewEventListener):
 
     # Overrides --------------------------------------------------
