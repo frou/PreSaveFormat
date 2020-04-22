@@ -1,0 +1,10 @@
+[
+  {
+    "caption": "PreSaveFormat: Settings",
+    "command": "edit_settings",
+    "args": {
+      "base_file": "${packages}/PreSaveFormat/PreSaveFormat.sublime-settings",
+      "default": "{\n\t$0\n}\n"
+    }
+  }
+]
