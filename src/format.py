@@ -98,6 +98,10 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
     def is_applicable(cls, settings):
         return cls.settings_for_view_language(settings) is not None
 
+    @classmethod
+    def applies_to_primary_view_only(cls):
+        return False
+
     def on_pre_save(self):
         try:
             lang_settings = self.settings_for_view_language(self.view.settings())
