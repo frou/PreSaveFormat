@@ -1,16 +1,16 @@
-import sublime
-import sublime_plugin
-from .sublime_extra import platform_startupinfo, command_name_from_class
-
 import re
 import subprocess
 
+import sublime
+import sublime_plugin
+
 from .pkg_settings import (
-    pkg_settings,
     PKG_SETTINGS_KEY_ENABLED,
-    PKG_SETTINGS_KEY_INCLUDE,
     PKG_SETTINGS_KEY_EXCLUDE,
+    PKG_SETTINGS_KEY_INCLUDE,
+    pkg_settings,
 )
+from .sublime_extra import command_name_from_class, platform_startupinfo
 
 
 class PreSaveFormat(sublime_plugin.TextCommand):
@@ -105,10 +105,14 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
     def on_pre_save(self):
         try:
             lang_settings = self.settings_for_view_language(self.view.settings())
-            if self.should_format(self.view.file_name(), lang_settings):
-                self.view.run_command(
-                    command_name_from_class(PreSaveFormat), lang_settings
-                )
+            if isinstance(lang_settings, list):
+                steps = lang_settings
+            else:
+                steps = [lang_settings]
+
+            for step in steps:
+                if self.should_format(self.view.file_name(), step):
+                    self.view.run_command(command_name_from_class(PreSaveFormat), step)
         except Exception as e:
             sublime.error_message(str(e))
 
