@@ -12,6 +12,16 @@ from .pkg_settings import (
 )
 from .sublime_extra import command_name_from_class, platform_startupinfo
 
+# @todo #0 Why does cursor position advance forward after each save when using e.g.
+#  pg_format on the .sql file:
+#      CREATE TABLE persons (
+#          personid INT
+#          , lastname VARCHAR(255)
+#          , firstname VARCHAR(255)
+#          , address VARCHAR(255)
+#          , city VARCHAR(255)
+#      );
+
 
 class PreSaveFormat(sublime_plugin.TextCommand):
 
