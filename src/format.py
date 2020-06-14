@@ -47,7 +47,7 @@ class PreSaveFormat(sublime_plugin.TextCommand):
             command.append(view_file_path)
 
         print(  # noqa: T001
-            "[{0}] Running {1} fed with content of view {2}".format(
+            "[{0}] Running process {1} fed with content of view {2}".format(
                 PreSaveFormat.__name__, command, view_file_path
             )
         )
