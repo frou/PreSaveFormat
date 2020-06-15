@@ -10,7 +10,7 @@ from .pkg_settings import (
     PKG_SETTINGS_KEY_INCLUDE,
     pkg_settings,
 )
-from .sublime_extra import command_name_from_class, platform_startupinfo
+from .sublime_extra import platform_startupinfo
 
 # @todo #0 Why does cursor position advance forward after each save when using e.g.
 #  pg_format on the .sql file:
@@ -122,7 +122,7 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
 
             for step in steps:
                 if self.should_format(self.view.file_name(), step):
-                    self.view.run_command(command_name_from_class(PreSaveFormat), step)
+                    self.view.run_command(PreSaveFormat(None).name(), step)
         except Exception as e:
             sublime.error_message(str(e))
 
