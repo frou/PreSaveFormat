@@ -4,7 +4,7 @@ import subprocess
 import sublime
 import sublime_plugin
 
-from .pkg_settings import (
+from .settings import (
     PKG_SETTINGS_KEY_ENABLED,
     PKG_SETTINGS_KEY_EXCLUDE,
     PKG_SETTINGS_KEY_INCLUDE,
