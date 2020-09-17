@@ -46,6 +46,9 @@ class PreSaveFormat(sublime_plugin.TextCommand):
         if append_file_path_to_command:
             command.append(view_file_path)
 
+        # Allow e.g. numbers to be unquoted in the settings file (4 instead of "4")
+        command = [str(component) for component in command]
+
         print(  # noqa: T001
             "[{0}] Running process {1} fed with content of view {2}".format(
                 PreSaveFormat.__name__, command, view_file_path
