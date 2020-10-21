@@ -118,18 +118,18 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
         return False
 
     def on_pre_save(self):
-        # try:
-        lang_settings = self.settings_for_view_language(self.view.settings())
-        if isinstance(lang_settings, list):
-            steps = lang_settings
-        else:
-            steps = [lang_settings]
+        try:
+            lang_settings = self.settings_for_view_language(self.view.settings())
+            if isinstance(lang_settings, list):
+                steps = lang_settings
+            else:
+                steps = [lang_settings]
 
-        for step in steps:
-            if self.should_format(self.view.file_name(), step):
-                self.view.run_command(PreSaveFormat(None).name(), step)
-        # except Exception as e:
-        # sublime.error_message(str(e))
+            for step in steps:
+                if self.should_format(self.view.file_name(), step):
+                    self.view.run_command(PreSaveFormat(None).name(), step)
+        except Exception as e:
+            sublime.error_message(str(e))
 
     # ------------------------------------------------------------
 
