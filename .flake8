@@ -1,0 +1,11 @@
+# REF: https://flake8.pycqa.org/en/latest/user/options.html
+
+[flake8]
+#
+# FS002 - '.format' used
+#
+extend-ignore = FS002
+# @todo Once on ST4 and using Python 3.8 for this package, stop ignoring flake8 FS002
+
+per-file-ignores =
+    boot.py:F401,F403
