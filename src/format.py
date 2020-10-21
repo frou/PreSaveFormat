@@ -31,7 +31,7 @@ class PreSaveFormat(sublime_plugin.TextCommand):
 
     # Overrides --------------------------------------------------
 
-    def run(self, edit, command, append_file_path_to_command, **_):
+    def run(self, edit, command, append_file_path_to_command=False, **_):
         try:
             self.run_core(edit, command, append_file_path_to_command)
         except Exception as e:

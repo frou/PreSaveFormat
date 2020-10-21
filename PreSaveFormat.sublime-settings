@@ -12,15 +12,14 @@
     //"Packages/Python/Python.sublime-syntax": {
     //    "enabled": true,
     //    "command": ["black", "-q", "-"],
-    //    "append_file_path_to_command": false,
     //    "extend_exclude": [
     //        "/setup.py",
-    //    ]
+    //    ],
     //},
 
-    // "Packages/Go/Go.sublime-syntax": {
+    // "Packages/JavaScript/JavaScript.sublime-syntax": {
     //     "enabled": true,
-    //     "command": ["goimports", "--srcdir"],
+    //     "command": ["prettier", "--no-config", "--print-width", 80, "--no-semi", "--stdin-filepath"],
     //     "append_file_path_to_command": true,
     // },
 }
