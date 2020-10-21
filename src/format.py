@@ -34,8 +34,8 @@ class PreSaveFormat(sublime_plugin.TextCommand):
     def run(self, edit, command, append_file_path_to_command=False, **_):
         try:
             self.run_core(edit, command, append_file_path_to_command)
-        except Exception as e:
-            sublime.error_message(str(e))
+        except Exception:
+            log_and_present_current_exn()
 
     # ------------------------------------------------------------
 
