@@ -1,22 +1,26 @@
-// @todo #0 Have root-level include/exclude keys in the settings file that
-//  can optionally be overriden for individual languages.
 {
-    // Below is some example configuration to copy-paste then uncomment in your
-    // User settings file that should be open over there --------------------->
+    "include": ["/"],
+    "exclude": [],
+    // In per-language settings blocks, the above can either be replaced
+    // completely (using keys "include" and "exclude") or added to (using keys
+    // "extend_include" and "extend_exclude")
 
-    //"Packages/Elm Syntax Highlighting/elm.sublime-syntax": {
-    //    "enabled": true,
-    //    "command": ["elm-format", "--stdin", "--yes"],
-    //    "append_file_path_to_command": false,
-    //    "include": ["/"],
-    //    "exclude": []
-    //},
+    // Below are some example per-language settings to copy-paste then uncomment
+    // in your "User" settings file. That file should have been automatically
+    // opened by Sublime Text on the right ===>
 
     //"Packages/Python/Python.sublime-syntax": {
     //    "enabled": true,
     //    "command": ["black", "-q", "-"],
     //    "append_file_path_to_command": false,
-    //    "include": ["/"],
-    //    "exclude": []
+    //    "extend_exclude": [
+    //        "/setup.py",
+    //    ]
     //},
+
+    // "Packages/Go/Go.sublime-syntax": {
+    //     "enabled": true,
+    //     "command": ["goimports", "--srcdir"],
+    //     "append_file_path_to_command": true,
+    // },
 }

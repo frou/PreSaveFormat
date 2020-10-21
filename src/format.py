@@ -7,6 +7,8 @@ import sublime_plugin
 from .settings import (
     PKG_SETTINGS_KEY_ENABLED,
     PKG_SETTINGS_KEY_EXCLUDE,
+    PKG_SETTINGS_KEY_EXTEND_EXCLUDE,
+    PKG_SETTINGS_KEY_EXTEND_INCLUDE,
     PKG_SETTINGS_KEY_INCLUDE,
     pkg_settings,
 )
@@ -116,18 +118,18 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
         return False
 
     def on_pre_save(self):
-        try:
-            lang_settings = self.settings_for_view_language(self.view.settings())
-            if isinstance(lang_settings, list):
-                steps = lang_settings
-            else:
-                steps = [lang_settings]
+        # try:
+        lang_settings = self.settings_for_view_language(self.view.settings())
+        if isinstance(lang_settings, list):
+            steps = lang_settings
+        else:
+            steps = [lang_settings]
 
-            for step in steps:
-                if self.should_format(self.view.file_name(), step):
-                    self.view.run_command(PreSaveFormat(None).name(), step)
-        except Exception as e:
-            sublime.error_message(str(e))
+        for step in steps:
+            if self.should_format(self.view.file_name(), step):
+                self.view.run_command(PreSaveFormat(None).name(), step)
+        # except Exception as e:
+        # sublime.error_message(str(e))
 
     # ------------------------------------------------------------
 
@@ -136,16 +138,28 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
         view_syntax_path = view_settings.get("syntax")
         return pkg_settings().get(view_syntax_path)
 
+    def load_extensible_settings_list(self, priority_settings, key, extension_key):
+        lst = priority_settings.get(key, pkg_settings().get(key))
+        lst.extend(
+            priority_settings.get(extension_key, pkg_settings().get(extension_key, []))
+        )
+        return lst
+
     def should_format(self, path, lang_settings):
         if not lang_settings.get(PKG_SETTINGS_KEY_ENABLED, True):
             return False
 
+        includes = self.load_extensible_settings_list(
+            lang_settings, PKG_SETTINGS_KEY_INCLUDE, PKG_SETTINGS_KEY_EXTEND_INCLUDE
+        )
+        excludes = self.load_extensible_settings_list(
+            lang_settings, PKG_SETTINGS_KEY_EXCLUDE, PKG_SETTINGS_KEY_EXTEND_EXCLUDE
+        )
+        print(includes)
+        print(excludes)
+
         # @todo #0 Use Python stdlib "glob" rather than basic substring matching.
         #  And add a comment in the default settings file explaining the logic.
-        include_hits = [
-            fragment in path for fragment in lang_settings.get(PKG_SETTINGS_KEY_INCLUDE)
-        ]
-        exclude_hits = [
-            fragment in path for fragment in lang_settings.get(PKG_SETTINGS_KEY_EXCLUDE)
-        ]
+        include_hits = [fragment in path for fragment in includes]
+        exclude_hits = [fragment in path for fragment in excludes]
         return any(include_hits) and not any(exclude_hits)

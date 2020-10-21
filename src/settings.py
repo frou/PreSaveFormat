@@ -9,5 +9,9 @@ def pkg_settings():
 
 
 PKG_SETTINGS_KEY_ENABLED = "enabled"
+
 PKG_SETTINGS_KEY_INCLUDE = "include"
+PKG_SETTINGS_KEY_EXTEND_INCLUDE = "extend_include"
+
 PKG_SETTINGS_KEY_EXCLUDE = "exclude"
+PKG_SETTINGS_KEY_EXTEND_EXCLUDE = "extend_exclude"
