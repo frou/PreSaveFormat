@@ -61,12 +61,12 @@ class PreSaveFormat(sublime_plugin.TextCommand):
             stderr=subprocess.PIPE,
             startupinfo=platform_startupinfo(),
         )
-        stdout_content, stderr_content = child_proc.communicate(
+        stdout_content_bytes, stderr_content_bytes = child_proc.communicate(
             input=bytes(view_content, self.TXT_ENCODING)
         )
         stdout_content, stderr_content = (
-            stdout_content.decode(self.TXT_ENCODING),
-            self.postprocess_stderr(stderr_content.decode(self.TXT_ENCODING)),
+            stdout_content_bytes.decode(self.TXT_ENCODING),
+            self.postprocess_stderr(stderr_content_bytes.decode(self.TXT_ENCODING)),
         )
 
         if child_proc.returncode != 0:
@@ -94,7 +94,7 @@ class PreSaveFormat(sublime_plugin.TextCommand):
 
     def postprocess_stderr(self, s):
         # Remove ANSI colour codes
-        s = re.sub("\x1b\\[\\d{1,2}m", "", s)
+        s = re.sub("\x1b\\[\\d{1,2}m", "", s)  # noqa: FS003
         return s.strip()
 
 
