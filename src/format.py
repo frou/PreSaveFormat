@@ -155,8 +155,6 @@ class PreSaveListener(sublime_plugin.ViewEventListener):
         excludes = self.load_extensible_settings_list(
             lang_settings, PKG_SETTINGS_KEY_EXCLUDE, PKG_SETTINGS_KEY_EXTEND_EXCLUDE
         )
-        print(includes)
-        print(excludes)
 
         # @todo #0 Use Python stdlib "glob" rather than basic substring matching.
         #  And add a comment in the default settings file explaining the logic.
